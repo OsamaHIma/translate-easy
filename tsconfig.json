@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "commonjs",
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "outDir": "./dist",
+    "lib": ["es2019", "dom", "esnext.promise"],
+    "rootDir": "./src"
+  },
+  "include": ["./src/**/*"]
+}

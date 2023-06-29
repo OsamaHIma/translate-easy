@@ -1,0 +1,5 @@
+src/
+tsconfig.json
+postcss.config.js
+tailwind.config
+node_modules
