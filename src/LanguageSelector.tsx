@@ -1,6 +1,7 @@
-import React from "react";
-import { useLanguage } from "./LanguageContext";
+"use client";
+import * as React from 'react';
 import { useState } from "react";
+import { useLanguage } from "./LanguageContext";
 import { FixedSizeList } from "react-window";
 import { Translate } from "./Translate";
 
@@ -16,6 +17,7 @@ interface LanguageSelectorProps {
   dropdownTextColor?: string;
   dropdownFontSize?: string;
   dropdownPadding?: string;
+  dropDownIconClass?: string;
   dropDownIcon?: string | React.ReactNode | null;
 }
 
@@ -30,6 +32,7 @@ export const LanguageSelector = ({
   dropdownTextColor = "",
   dropdownFontSize = "",
   dropdownPadding = "py-2",
+  dropDownIconClass = "w-5",
   dropDownIcon,
 }: LanguageSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,7 +87,11 @@ export const LanguageSelector = ({
         </span>
 
         {!dropDownIcon && (
-         <img src="./chevron-down-solid.svg" alt="svg icon" className="w-3" />
+          <div className={`${dropDownIconClass}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
+            </svg>
+          </div>
         )}
         {dropDownIcon}
       </button>

@@ -1,53 +1,55 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Translate = void 0;
-const react_1 = __importDefault(require("react"));
-const react_2 = require("react");
-const LanguageContext_1 = require("./LanguageContext");
-const Translate = ({ children, translations = {} }) => {
-    const { selectedLanguage, defaultLanguage } = (0, LanguageContext_1.useLanguage)();
-    const [translatedText, setTranslatedText] = (0, react_2.useState)("");
-    (0, react_2.useEffect)(() => {
-        const translateText = () => __awaiter(void 0, void 0, void 0, function* () {
-            const storageKey = `translatedText_${selectedLanguage}_${children}`;
-            const storedText = localStorage.getItem(storageKey);
-            if (storedText) {
-                setTranslatedText(storedText);
-                return;
-            }
-            if (selectedLanguage === defaultLanguage) {
-                setTranslatedText(children);
-                return;
-            }
-            if (translations[selectedLanguage]) {
-                setTranslatedText(translations[selectedLanguage]);
-                return;
-            }
-            try {
-                const response = yield fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLanguage}&dt=t&q=${children}`);
-                const json = yield response.json();
-                const translatedText = json[0][0][0];
-                setTranslatedText(translatedText);
-                localStorage.setItem(storageKey, translatedText);
-            }
-            catch (error) {
-                console.error(error);
-            }
-        });
+"use client";
+import { __awaiter, __generator } from "tslib";
+import * as React from 'react';
+import { useState, useEffect } from "react";
+import { useLanguage } from "./LanguageContext";
+export var Translate = function (_a) {
+    var children = _a.children, _b = _a.translations, translations = _b === void 0 ? {} : _b;
+    var _c = useLanguage(), selectedLanguage = _c.selectedLanguage, defaultLanguage = _c.defaultLanguage;
+    var _d = useState(""), translatedText = _d[0], setTranslatedText = _d[1];
+    useEffect(function () {
+        var translateText = function () { return __awaiter(void 0, void 0, void 0, function () {
+            var storageKey, storedText, response, json, translatedText_1, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        storageKey = "translatedText_".concat(selectedLanguage, "_").concat(children);
+                        storedText = localStorage.getItem(storageKey);
+                        if (storedText) {
+                            setTranslatedText(storedText);
+                            return [2 /*return*/];
+                        }
+                        if (selectedLanguage === defaultLanguage) {
+                            setTranslatedText(children);
+                            return [2 /*return*/];
+                        }
+                        if (translations[selectedLanguage]) {
+                            setTranslatedText(translations[selectedLanguage]);
+                            return [2 /*return*/];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, , 5]);
+                        return [4 /*yield*/, fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=".concat(selectedLanguage, "&dt=t&q=").concat(children))];
+                    case 2:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 3:
+                        json = _a.sent();
+                        translatedText_1 = json[0][0][0];
+                        setTranslatedText(translatedText_1);
+                        localStorage.setItem(storageKey, translatedText_1);
+                        return [3 /*break*/, 5];
+                    case 4:
+                        error_1 = _a.sent();
+                        console.error(error_1);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        }); };
         translateText();
     }, [children, selectedLanguage, defaultLanguage, translations]);
-    return react_1.default.createElement(react_1.default.Fragment, null, translatedText.toString() || children);
+    return React.createElement(React.Fragment, null, translatedText.toString() || children);
 };
-exports.Translate = Translate;
+//# sourceMappingURL=Translate.js.map

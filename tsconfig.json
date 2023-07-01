@@ -1,14 +1,26 @@
 {
+  "include": ["src"],
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "commonjs",
+    "module": "ESNext",
+    "lib": ["dom", "esnext"],
+    "importHelpers": true,
     "declaration": true,
+    "sourceMap": true,
+    "rootDir": "./src",
+    "outDir": "dist",
     "strict": true,
-    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
     "jsx": "react",
-    "outDir": "./dist",
-    "lib": ["es2019", "dom", "esnext.promise"],
-    "rootDir": "./src"
-  },
-  "include": ["./src/**/*"]
+    "esModuleInterop": true
+  }
 }

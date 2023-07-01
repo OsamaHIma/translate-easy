@@ -74,7 +74,6 @@ function MyComponent() {
 ```
 
 You can customize the appearance of the LanguageSelector using various props, such as buttonBgColor, dropdownTextColor, etc. See the component code for a full list of props.
-Or you can leave it as it is with the default styles if you are using taillwindcss or import styles.css form the dist folder.
 
 ## Translate 📝
 

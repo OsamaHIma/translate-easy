@@ -1,10 +1,6 @@
-import React, {
-  createContext,
-  useContext,
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
+"use client";
+import * as React from "react";
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
 
 interface LanguageContextValue {
   selectedLanguage: string;
@@ -50,7 +46,8 @@ export const LanguageProvider = ({
   ],
   defaultLanguage = "en",
 }: LanguageProviderProps) => {
-  const userLanguage = typeof navigator !== "undefined" && navigator.language;
+  const userLanguage =
+    typeof navigator !== "undefined" && navigator.language.split("-")[0];
   const [selectedLanguage, setSelectedLanguage] = useState<string>(
     (typeof window !== "undefined" &&
       window.localStorage.getItem("selectedLanguage")) ||
