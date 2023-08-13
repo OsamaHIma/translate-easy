@@ -18,33 +18,61 @@ yarn add translate-easy
 
 ## Usage
 
-### LanguageProvider
+### LanguageProvider 🌐
 
-To start using Translate Easy, you need to wrap your application with the `LanguageProvider` component provided by the package. This component sets up the language context and manages the selected language state.
+The LanguageProvider component is a context provider that allows you to manage the user's selected language. You should wrap your application (or a section of your application) with the LanguageProvider to make the language context available to all child components.
 
 ```jsx
-import { LanguageProvider } from 'translate-easy';
+import { LanguageProvider } from "translate-easy";
 
-const App = () => {
-  return (
-    <LanguageProvider>
-      {/* Your application components */}
-    </LanguageProvider>
-  );
-};
+function App() {
+  return <LanguageProvider>{/* Your app content */}</LanguageProvider>;
+}
 ```
 
-The `LanguageProvider` component takes the following optional props:
+you can pass your languages to LanguageProvider and overwrite the default languages. You can pass a defaultLanguage prop if the default language (the languge you used while developing the website ) is not English.
 
-- `languages`: an array of language objects, each containing a `code` and `name` property. If not provided, a default set of languages will be used.
-- `defaultLanguage`: the default language to use if no stored or user language is available. It should be a language object with a `code` and `name` property.
+```jsx
+import { LanguageProvider } from "translate-easy";
+
+function App() {
+  return (
+    <LanguageProvider
+      languages={[
+        { code: "ar", name: "Arabic" },
+        { code: "en", name: "English" },
+      ]}
+    >
+      {/_ Your app content _/}
+    </LanguageProvider>
+  );
+}
+```
+
+Default languages
+
+```jsx
+languages = [
+  { code: "ar", name: "Arabic" },
+  { code: "en", name: "English" },
+  { code: "fr", name: "French" },
+  { code: "es", name: "Spanish" },
+  { code: "de", name: "German" },
+  { code: "hi", name: "Hindi" },
+  { code: "it", name: "Italian" },
+  { code: "ja", name: "Japanese" },
+  { code: "ko", name: "Korean" },
+  { code: "zh-CN", name: "Chinese Simplified" },
+  { code: "zh-TW", name: "Chinese Traditional" },
+];
+```
 
 ### useLanguage Hook
 
 To access the selected language and change the language, you can use the `useLanguage` hook provided by the package.
 
 ```jsx
-import { useLanguage } from 'translate-easy';
+import { useLanguage } from "translate-easy";
 
 const MyComponent = () => {
   const { selectedLanguage, handleChangeLanguage, languages } = useLanguage();
@@ -60,14 +88,12 @@ The `selectedLanguage` object contains the currently selected language, `handleC
 To translate your strings based on the selected language, you can use the `Translate` component provided by the package.
 
 ```jsx
-import { Translate } from 'translate-easy';
+import { Translate } from "translate-easy";
 
 const MyComponent = () => {
   return (
     <div>
-      <Translate translations={{ ar: 'مرحبا', fr: 'Bonjour' }}>
-        Hello
-      </Translate>
+      <Translate translations={{ ar: "مرحبا", fr: "Bonjour" }}>Hello</Translate>
     </div>
   );
 };
@@ -83,7 +109,7 @@ The `Translate` component takes the following props:
 To create a basic language selector, you can use the `useLanguage` hook and the `handleChangeLanguage` function provided by the package.
 
 ```jsx
-import { useLanguage } from 'translate-easy';
+import { useLanguage } from "translate-easy";
 
 function LanguageSelector() {
   const { selectedLanguage, handleChangeLanguage, languages } = useLanguage();
@@ -118,8 +144,8 @@ You can customize the appearance and behavior of the language selector according
 Here's a complete example demonstrating how to use Translate Easy in a React application:
 
 ```jsx
-import React from 'react';
-import { LanguageProvider, Translate, useLanguage } from 'translate-easy';
+import React from "react";
+import { LanguageProvider, Translate, useLanguage } from "translate-easy";
 
 const App = () => {
   return (
@@ -141,13 +167,13 @@ const MyComponent = () => {
       <LanguageSelector />
 
       <h1>
-        <Translate translations={{ en: 'Hello', fr: 'Bonjour' }}>
+        <Translate translations={{ en: "Hello", fr: "Bonjour" }}>
           Hello
         </Translate>
       </h1>
 
       <p>
-        <Translate translations={{ en: 'Welcome!', fr: 'Bienvenue !' }}>
+        <Translate translations={{ en: "Welcome!", fr: "Bienvenue !" }}>
           Welcome!
         </Translate>
       </p>
@@ -159,7 +185,7 @@ const MyComponent = () => {
             onClick={() => handleLanguageClick(language.code)}
             style={{
               fontWeight:
-                selectedLanguage.code === language.code ? 'bold' : 'normal',
+                selectedLanguage.code === language.code ? "bold" : "normal",
             }}
           >
             {language.name}

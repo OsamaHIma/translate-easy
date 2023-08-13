@@ -39,6 +39,42 @@ const App = () => {
 - `languages`: مصفوفة من كائنات اللغة، تحتوي كل منها على خصائص `code` و `name`. إذا لم يتم توفيرها، سيتم استخدام مجموعة افتراضية من اللغات.
 - `defaultLanguage`: اللغة الافتراضية التي يتم استخدامها إذا لم تكن هناك لغة مخزنة أو مستخدم متاحة. يجب أن يكون كائن لغة يحتوي على خصائص `code` و `name`.
 
+
+```jsx
+import { LanguageProvider } from "translate-easy";
+
+function App() {
+  return (
+    <LanguageProvider
+      languages={[
+        { code: "ar", name: "Arabic" },
+        { code: "en", name: "English" },
+      ]}
+    >
+      {/_ Your app content _/}
+    </LanguageProvider>
+  );
+}
+```
+
+اللغات الافتراضية
+
+```jsx
+languages = [
+  { code: "ar", name: "Arabic" },
+  { code: "en", name: "English" },
+  { code: "fr", name: "French" },
+  { code: "es", name: "Spanish" },
+  { code: "de", name: "German" },
+  { code: "hi", name: "Hindi" },
+  { code: "it", name: "Italian" },
+  { code: "ja", name: "Japanese" },
+  { code: "ko", name: "Korean" },
+  { code: "zh-CN", name: "Chinese Simplified" },
+  { code: "zh-TW", name: "Chinese Traditional" },
+];
+```
+
 ### useLanguage Hook
 
 للوصول إلى اللغة المحددة وتغيير اللغة، يمكنك استخدام خطاف `useLanguage` المقدم من الحزمة.

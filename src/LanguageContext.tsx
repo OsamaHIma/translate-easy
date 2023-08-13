@@ -47,6 +47,7 @@ const defaultLanguages: Language[] = [
   { code: "fr", name: "French" },
   { code: "es", name: "Spanish" },
   { code: "de", name: "German" },
+  { code: "hi", name: "Hindi" },
   { code: "it", name: "Italian" },
   { code: "ja", name: "Japanese" },
   { code: "ko", name: "Korean" },
