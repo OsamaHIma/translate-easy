@@ -1,22 +1,20 @@
-import * as React from "react";
+import React from "react";
+interface Language {
+    code: string;
+    name: string;
+}
 interface LanguageContextValue {
-    selectedLanguage: string;
-    handleLanguageChange: (language: string) => void;
-    languages: {
-        code: string;
-        name: string;
-    }[];
-    defaultLanguage?: string;
+    selectedLanguage: Language;
+    handleChangeLanguage: (languageCode: string) => void;
+    languages: Language[];
+    defaultLanguage: Language;
 }
 interface LanguageProviderProps {
     children: React.ReactNode;
-    languages?: {
-        code: string;
-        name: string;
-    }[];
-    defaultLanguage?: string;
+    languages?: Language[];
+    defaultLanguage: Language;
 }
 export declare const LanguageContext: React.Context<LanguageContextValue>;
 export declare const useLanguage: () => LanguageContextValue;
-export declare const LanguageProvider: ({ children, languages, defaultLanguage, }: LanguageProviderProps) => JSX.Element;
+export declare const LanguageProvider: React.FC<LanguageProviderProps>;
 export {};

@@ -1,105 +1,209 @@
-# 🌍 Translate-easy
+# Translate Easy
 
-Translate-easy is an easy-to-use NPM package that allows you to integrate Google's Translation API into your web applications.
+Translate Easy is a React package that provides an easy way to implement language translation and selection in your React applications. It allows you to define multiple languages and translations, and provides a context and hook for managing the selected language.
+
+## Installation
+
+You can install the package using npm or yarn:
+
+```bash
+npm install translate-easy
+```
+
+or
+
+```bash
+yarn add translate-easy
+```
 
 ## Usage
 
-translate-easy provides three main components: LanguageProvider, LanguageSelector, and Translate.
+### LanguageProvider
 
-### LanguageProvider 🌐
+To start using Translate Easy, you need to wrap your application with the `LanguageProvider` component provided by the package. This component sets up the language context and manages the selected language state.
 
-The LanguageProvider component is a context provider that allows you to manage the user's selected language. You should wrap your application (or a section of your application) with the LanguageProvider to make the language context available to all child components.
-
-``` jsx
+```jsx
 import { LanguageProvider } from 'translate-easy';
 
-function App() {
+const App = () => {
   return (
     <LanguageProvider>
-      {/* Your app content */}
+      {/* Your application components */}
     </LanguageProvider>
   );
-}
+};
 ```
 
-you can pass your languages to LanguageProvider and overwrite the default languages.
-You can pass a defaultLanguage prop if the default language (the languge you used while developing the website ) is not English.
+The `LanguageProvider` component takes the following optional props:
+
+- `languages`: an array of language objects, each containing a `code` and `name` property. If not provided, a default set of languages will be used.
+- `defaultLanguage`: the default language to use if no stored or user language is available. It should be a language object with a `code` and `name` property.
+
+### useLanguage Hook
+
+To access the selected language and change the language, you can use the `useLanguage` hook provided by the package.
 
 ```jsx
-import { LanguageProvider } from 'translate-easy';
+import { useLanguage } from 'translate-easy';
 
-function App() {
-  return (
-    <LanguageProvider
-        languages={[
-        { code: "ar", name: "Arabic" },
-        { code: "en", name: "English" },
-        ]}
-    >
-      {/* Your app content */}
-    </LanguageProvider>
-  );
-}
+const MyComponent = () => {
+  const { selectedLanguage, handleChangeLanguage, languages } = useLanguage();
+
+  // Your component logic
+};
 ```
 
-#### Default languages
+The `selectedLanguage` object contains the currently selected language, `handleChangeLanguage` is a function to change the language, and `languages` is an array of available languages.
 
-``` jsx
-languages = [
-    { code: "ar", name: "Arabic" },
-    { code: "en", name: "English" },
-    { code: "fr", name: "French" },
-    { code: "es", name: "Spanish" },
-    { code: "de", name: "German" },
-    { code: "it", name: "Italian" },
-    { code: "ja", name: "Japanese" },
-    { code: "ko", name: "Korean" },
-    { code: "zh-CN", name: "Chinese Simplified" },
-    { code: "zh-TW", name: "Chinese Traditional" },
-  ]
-```
+### Translate Component
 
-## LanguageSelector 🌎
-
-The LanguageSelector component is a dropdown menu that allows the user to select their preferred language. It automatically updates the language context when the user selects a language.
-
-``` jsx
-import { LanguageSelector } from 'translate-easy';
-
-function MyComponent() {
-  return (
-    <LanguageSelector />
-  );
-}
-```
-
-You can customize the appearance of the LanguageSelector using various props, such as buttonBgColor, dropdownTextColor, etc. See the component code for a full list of props.
-
-## Translate 📝
-
-The Translate component is a simple component that translates a given string to the user's selected language. It uses the Google Translation API to perform the translation.
-The translations will be cached so offline translations work and the api won't be called again.
-
-``` jsx
-import { Translate } from 'translate-easy';
-
-function MyComponent() {
-  return (
-    <h1><Translate>مرحبا</Translate></h1>
-  );
-}
-```
-
-But Google Traslate is not accurate right?,
-
-## That's why the Translate component accepts a translations prop to overwrite the translation from the API if needed.
+To translate your strings based on the selected language, you can use the `Translate` component provided by the package.
 
 ```jsx
 import { Translate } from 'translate-easy';
 
-function MyComponent() {
+const MyComponent = () => {
   return (
-    <h1><Translate translations={{ en: 'Hello', es: 'Hola' }}>مرحبا</Translate></h1>
+    <div>
+      <Translate translations={{ ar: 'مرحبا', fr: 'Bonjour' }}>
+        Hello
+      </Translate>
+    </div>
+  );
+};
+```
+
+The `Translate` component takes the following props:
+
+- `translations`: an object that maps language codes to translated strings. Each language code should correspond to a translation for the string being translated.
+- `children`: the string to be translated.
+
+### LanguageSelector
+
+To create a basic language selector, you can use the `useLanguage` hook and the `handleChangeLanguage` function provided by the package.
+
+```jsx
+import { useLanguage } from 'translate-easy';
+
+function LanguageSelector() {
+  const { selectedLanguage, handleChangeLanguage, languages } = useLanguage();
+
+  const handleLanguageClick = (languageCode) => {
+    handleChangeLanguage(languageCode);
+  };
+
+  return (
+    <ul>
+      {languages.map((language) => (
+        <li
+          key={language.code}
+          onClick={() => handleLanguageClick(language.code)}
+          style={{
+            fontWeight:
+              selectedLanguage.code === language.code ? "bold" : "normal",
+          }}
+        >
+          {language.name}
+        </li>
+      ))}
+    </ul>
   );
 }
 ```
+
+You can customize the appearance and behavior of the language selector according to your application's needs.
+
+## Example
+
+Here's a complete example demonstrating how to use Translate Easy in a React application:
+
+```jsx
+import React from 'react';
+import { LanguageProvider, Translate, useLanguage } from 'translate-easy';
+
+const App = () => {
+  return (
+    <LanguageProvider>
+      <MyComponent />
+    </LanguageProvider>
+  );
+};
+
+const MyComponent = () => {
+  const { selectedLanguage, handleChangeLanguage, languages } = useLanguage();
+
+  const handleLanguageClick = (languageCode) => {
+    handleChangeLanguage(languageCode);
+  };
+
+  return (
+    <div>
+      <LanguageSelector />
+
+      <h1>
+        <Translate translations={{ en: 'Hello', fr: 'Bonjour' }}>
+          Hello
+        </Translate>
+      </h1>
+
+      <p>
+        <Translate translations={{ en: 'Welcome!', fr: 'Bienvenue !' }}>
+          Welcome!
+        </Translate>
+      </p>
+
+      <ul>
+        {languages.map((language) => (
+          <li
+            key={language.code}
+            onClick={() => handleLanguageClick(language.code)}
+            style={{
+              fontWeight:
+                selectedLanguage.code === language.code ? 'bold' : 'normal',
+            }}
+          >
+            {language.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+function LanguageSelector() {
+  const { selectedLanguage, handleChangeLanguage, languages } = useLanguage();
+
+  const handleLanguageClick = (languageCode) => {
+    handleChangeLanguage(languageCode);
+  };
+
+  return (
+    <ul>
+      {languages.map((language) => (
+        <li
+          key={language.code}
+          onClick={() => handleLanguageClick(language.code)}
+          style={{
+            fontWeight:
+              selectedLanguage.code === language.code ? "bold" : "normal",
+          }}
+        >
+          {language.name}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default App;
+```
+
+In this example, the `LanguageProvider` wraps the `MyComponent`, which includes the `LanguageSelector` and uses the `Translate` component to translate the strings based on the selected language.
+
+## Conclusion
+
+Translate Easy simplifies language translation and selection in React applications. It provides a convenient context, hook, and component for managing and using translations. You can easily integrate it into your project and customize it according to your specific requirements.
+
+For more information and examples, you can refer to the official documentation of Translate Easy.
+
+Contributions are welcome! If you're interested in contributing, please visit the [GitHub repository ↗](https://github.com/OsamaHIma/translate-easy/tree/master). Currently, we need someone to create an OpenAI account so we can use ChatGPT for translations primarily and Google as a fallback.
