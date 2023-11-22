@@ -42,18 +42,19 @@ export const useLanguage = () => {
 };
 
 const defaultLanguages: Language[] = [
-  { code: "ar", name: "Arabic" },
+  { code: "ar", name: "العربية" },
   { code: "en", name: "English" },
-  { code: "fr", name: "French" },
-  { code: "es", name: "Spanish" },
-  { code: "de", name: "German" },
-  { code: "hi", name: "Hindi" },
-  { code: "it", name: "Italian" },
-  { code: "ja", name: "Japanese" },
-  { code: "ko", name: "Korean" },
-  { code: "zh-CN", name: "Chinese Simplified" },
-  { code: "zh-TW", name: "Chinese Traditional" },
-];
+  { code: "fr", name: "Français" },
+  { code: "es", name: "Español" },
+  { code: "de", name: "Deutsch" },
+  { code: "hi", name: "हिन्दी" },
+  { code: "it", name: "Italiano" },
+  { code: "ja", name: "日本語" },
+  { code: "ko", name: "한국어" },
+  { code: "zh-CN", name: "中文（简体）" },
+  { code: "zh-TW", name: "中文（繁體）" },
+]
+;
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
