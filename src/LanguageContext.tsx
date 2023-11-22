@@ -53,8 +53,7 @@ const defaultLanguages: Language[] = [
   { code: "ko", name: "한국어" },
   { code: "zh-CN", name: "中文（简体）" },
   { code: "zh-TW", name: "中文（繁體）" },
-]
-;
+];
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
