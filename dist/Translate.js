@@ -2,10 +2,27 @@ import { __awaiter, __generator } from "tslib";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "./LanguageContext";
+/**
+ * Props for the Translate component.
+ * @typedef {Object} TranslateProps
+ * @property {string} children - The text to be translated.
+ * @property {{ [key: string]: string }} [translations] - Optional translations for specific languages.
+ */
+/**
+ * Component for translating text based on the selected language.
+ * @param {TranslateProps} props - The component props.
+ * @returns {JSX.Element} The translated text.
+ * @example
+ * // Example 1: Basic usage without translations
+ * <Translate>Hello, world!</Translate>
+ *
+ * // Example 2: Usage with specific translations
+ * <Translate translations={{ 'ar': 'مرحبا بالعالم', 'fr': 'Bonjour le monde!' }}>Hello, world!</Translate>
+ */
 export var Translate = function (_a) {
-    var children = _a.children, _b = _a.translations, translations = _b === void 0 ? {} : _b;
-    var _c = useLanguage(), selectedLanguage = _c.selectedLanguage, defaultLanguage = _c.defaultLanguage;
-    var _d = useState(""), translatedText = _d[0], setTranslatedText = _d[1];
+    var children = _a.children, _b = _a.translations, translations = _b === void 0 ? {} : _b, _c = _a.saveToLocalStorage, saveToLocalStorage = _c === void 0 ? true : _c;
+    var _d = useLanguage(), selectedLanguage = _d.selectedLanguage, defaultLanguage = _d.defaultLanguage;
+    var _e = useState(""), translatedText = _e[0], setTranslatedText = _e[1];
     useEffect(function () {
         var translateText = function () { return __awaiter(void 0, void 0, void 0, function () {
             var storageKey, storedText, response, json, translatedText_1, fallbackError_1;
@@ -14,7 +31,7 @@ export var Translate = function (_a) {
                     case 0:
                         storageKey = "translatedText_".concat(selectedLanguage.code, "_").concat(children);
                         storedText = localStorage.getItem(storageKey);
-                        if (storedText) {
+                        if (storedText && saveToLocalStorage) {
                             setTranslatedText(storedText);
                             return [2 /*return*/];
                         }
@@ -24,6 +41,9 @@ export var Translate = function (_a) {
                         }
                         if (translations[selectedLanguage.code]) {
                             setTranslatedText(translations[selectedLanguage.code]);
+                            if (saveToLocalStorage) {
+                                localStorage.setItem(storageKey, translations[selectedLanguage.code]);
+                            }
                             return [2 /*return*/];
                         }
                         _a.label = 1;
@@ -49,36 +69,13 @@ export var Translate = function (_a) {
             });
         }); };
         translateText();
-    }, [children, selectedLanguage, translations]);
-    // Helper function to translate using ChatGPT
-    // const translateWithChatGPT = async (text: string, targetLanguage: string) => {
-    //   try {
-    //     // Make an API call to ChatGPT for translation
-    //     const response = await fetch(
-    //       "https://api.openai.com/v1/engines/davinci-codex/completions",
-    //       {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-    //         },
-    //         body: JSON.stringify({
-    //           prompt: `Translate the following text to ${targetLanguage}: "${text}"`,
-    //           max_tokens: 100,
-    //           temperature: 0.5,
-    //           top_p: 1.0,
-    //           n: 1,
-    //           stop: "\n",
-    //         }),
-    //       }
-    //     );
-    //     const data = await response.json();
-    //     const translation = data.choices[0].text.trim();
-    //     return translation;
-    //   } catch (error) {
-    //     console.warn("ChatGPT translation failed");
-    //   }
-    // };
+    }, [
+        children,
+        selectedLanguage,
+        translations,
+        saveToLocalStorage,
+        defaultLanguage,
+    ]);
     return React.createElement(React.Fragment, null, translatedText.toString() || children);
 };
 //# sourceMappingURL=Translate.js.map

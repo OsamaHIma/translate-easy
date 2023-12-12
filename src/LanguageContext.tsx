@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useState,
   useEffect,
-} from "react";
+  } from "react";
 
 interface Language {
   code: string;
@@ -24,14 +24,47 @@ interface LanguageProviderProps {
   defaultLanguage: Language;
 }
 
+/**
+ * Represents a language with a code and name.
+ * @typedef {Object} Language
+ * @property {string} code - The language code.
+ * @property {string} name - The language name.
+ */
+
+/**
+ * Represents the value of the LanguageContext.
+ * @typedef {Object} LanguageContextValue
+ * @property {Language} selectedLanguage - The selected language.
+ * @property {(languageCode: string) => void} handleChangeLanguage - A function to change the selected language.
+ * @property {Language[]} languages - An array of available languages.
+ * @property {Language} defaultLanguage - The default language.
+ */
+
+/**
+ * Represents the properties of the LanguageProvider component.
+ * @typedef {Object} LanguageProviderProps
+ * @property {ReactNode} children - The children components.
+ * @property {Language[]} [languages] - An optional array of available languages.
+ * @property {Language} defaultLanguage - The default language.
+ */
+
+/**
+ * The context for managing language settings.
+ * @type {React.Context<LanguageContextValue>}
+ */
 export const LanguageContext = createContext<LanguageContextValue>({
   selectedLanguage: { code: "", name: "" },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleChangeLanguage: () => {},
   languages: [{ code: "", name: "" }],
   defaultLanguage: { code: "", name: "" },
 });
 
-export const useLanguage = () => {
+/**
+ * Custom hook to access the language context.
+ * @returns {LanguageContextValue} The language context value.
+ */
+export const useLanguage = (): LanguageContextValue => {
   const context = useContext(LanguageContext);
   if (!context) {
     throw new Error(
@@ -41,6 +74,10 @@ export const useLanguage = () => {
   return context;
 };
 
+/**
+ * Default array of languages.
+ * @type {Language[]}
+ */
 const defaultLanguages: Language[] = [
   { code: "ar", name: "العربية" },
   { code: "en", name: "English" },
@@ -55,6 +92,26 @@ const defaultLanguages: Language[] = [
   { code: "zh-TW", name: "中文（繁體）" },
 ];
 
+/**
+ * The provider component for managing language settings.
+ * @param {LanguageProviderProps} props - The component props.
+ * @returns {JSX.Element} The JSX element.
+ * @example
+ * // Example 1: Basic usage with default settings
+ * <LanguageProvider defaultLanguage={{ code: "en", name: "English" }}>
+ *   <App />
+ * </LanguageProvider>
+ *
+ * // Example 2: Providing custom languages and default language
+ * const customLanguages = [
+ *   { code: "es", name: "Español" },
+ *   { code: "fr", name: "Français" },
+ *   { code: "de", name: "Deutsch" },
+ * ];
+ * <LanguageProvider languages={customLanguages} defaultLanguage={{ code: "es", name: "Español" }}>
+ *   <App />
+ * </LanguageProvider>
+ */
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
   languages = defaultLanguages,
@@ -74,18 +131,15 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       }
     }
 
-    // const userLanguage =
-    //   typeof navigator !== "undefined" && navigator.language.split("-")[0];
-
-    // const detectedLanguage = languages.find(
-    //   (language) => language.code === userLanguage
-    // );
-
-    // return detectedLanguage || defaultLanguage;
     return defaultLanguage;
   });
 
-  const handleChangeLanguage = (languageCode: string) => {
+  /**
+   * Function to change the selected language.
+   * @param {string} languageCode - The code of the language to set.
+   * @returns {void}
+   */
+  const handleChangeLanguage = (languageCode: string): void => {
     const selectedLanguage = languages.find(
       (language) => language.code === languageCode
     );

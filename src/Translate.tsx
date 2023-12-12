@@ -5,9 +5,32 @@ import { useLanguage } from "./LanguageContext";
 interface TranslateProps {
   children: string;
   translations?: { [key: string]: string };
+  saveToLocalStorage?: boolean;
 }
 
-export const Translate = ({ children, translations = {} }: TranslateProps) => {
+/**
+ * Props for the Translate component.
+ * @typedef {Object} TranslateProps
+ * @property {string} children - The text to be translated.
+ * @property {{ [key: string]: string }} [translations] - Optional translations for specific languages.
+ */
+
+/**
+ * Component for translating text based on the selected language.
+ * @param {TranslateProps} props - The component props.
+ * @returns {JSX.Element} The translated text.
+ * @example
+ * // Example 1: Basic usage without translations
+ * <Translate>Hello, world!</Translate>
+ *
+ * // Example 2: Usage with specific translations
+ * <Translate translations={{ 'ar': 'مرحبا بالعالم', 'fr': 'Bonjour le monde!' }}>Hello, world!</Translate>
+ */
+export const Translate: React.FC<TranslateProps> = ({
+  children,
+  translations = {},
+  saveToLocalStorage = true,
+}: TranslateProps) => {
   const { selectedLanguage, defaultLanguage } = useLanguage();
   const [translatedText, setTranslatedText] = useState("");
 
@@ -17,7 +40,7 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
 
       const storedText = localStorage.getItem(storageKey);
 
-      if (storedText) {
+      if (storedText && saveToLocalStorage) {
         setTranslatedText(storedText);
         return;
       }
@@ -26,21 +49,14 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
         setTranslatedText(children);
         return;
       }
+
       if (translations[selectedLanguage.code]) {
         setTranslatedText(translations[selectedLanguage.code]);
+        if (saveToLocalStorage) {
+          localStorage.setItem(storageKey, translations[selectedLanguage.code]);
+        }
         return;
       }
-
-      // ChatGPT translation disabled cause there is no api key at the moment
-
-      // try {
-      //   // Translate using ChatGPT
-      //   const translation = await translateWithChatGPT(children, selectedLanguage.code);
-      //   setTranslatedText(translation);
-      //   console.log("translation done by chatgpt")
-      //   localStorage.setItem(storageKey, translation);
-      // } catch (error) {
-      //   console.error("ChatGPT translation failed:", error);
 
       try {
         // Fallback to Google Translate
@@ -55,43 +71,16 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
         console.error("Google Translate fallback failed:", fallbackError);
         setTranslatedText(children);
       }
-      // }
     };
 
     translateText();
-  }, [children, selectedLanguage, translations]);
-
-  // Helper function to translate using ChatGPT
-
-  // const translateWithChatGPT = async (text: string, targetLanguage: string) => {
-  //   try {
-  //     // Make an API call to ChatGPT for translation
-  //     const response = await fetch(
-  //       "https://api.openai.com/v1/engines/davinci-codex/completions",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-  //         },
-  //         body: JSON.stringify({
-  //           prompt: `Translate the following text to ${targetLanguage}: "${text}"`,
-  //           max_tokens: 100,
-  //           temperature: 0.5,
-  //           top_p: 1.0,
-  //           n: 1,
-  //           stop: "\n",
-  //         }),
-  //       }
-  //     );
-
-  //     const data = await response.json();
-  //     const translation = data.choices[0].text.trim();
-  //     return translation;
-  //   } catch (error) {
-  //     console.warn("ChatGPT translation failed");
-  //   }
-  // };
+  }, [
+    children,
+    selectedLanguage,
+    translations,
+    saveToLocalStorage,
+    defaultLanguage,
+  ]);
 
   return <>{translatedText.toString() || children}</>;
 };

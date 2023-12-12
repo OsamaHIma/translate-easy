@@ -103,6 +103,7 @@ The `Translate` component takes the following props:
 
 - `translations`: an object that maps language codes to translated strings. Each language code should correspond to a translation for the string being translated.
 - `children`: the string to be translated.
+- `saveToLocalStorage` (boolean, optional, default: `true`): Indicates whether the translation should be saved to local storage.
 
 ### LanguageSelector
 
