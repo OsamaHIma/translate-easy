@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useState,
   useEffect,
-  } from "react";
+} from "react";
 
 interface Language {
   code: string;
@@ -152,11 +152,12 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     if (typeof window !== "undefined" && selectedLanguage.code) {
       window.localStorage.setItem("selectedLanguage", selectedLanguage.code);
     }
-  }, [selectedLanguage]);
 
-  useEffect(() => {
-    document.documentElement.dir =
-      selectedLanguage.code === "ar" ? "rtl" : "ltr";
+    if (selectedLanguage.code === "ar") {
+      document.documentElement.dir = "rtl";
+    } else {
+      document.documentElement.dir = "ltr";
+    }
   }, [selectedLanguage]);
 
   const value = useMemo(() => {
