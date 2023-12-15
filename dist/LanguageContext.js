@@ -107,10 +107,12 @@ export var LanguageProvider = function (_a) {
         if (typeof window !== "undefined" && selectedLanguage.code) {
             window.localStorage.setItem("selectedLanguage", selectedLanguage.code);
         }
-    }, [selectedLanguage]);
-    useEffect(function () {
-        document.documentElement.dir =
-            selectedLanguage.code === "ar" ? "rtl" : "ltr";
+        if (selectedLanguage.code === "ar") {
+            document.documentElement.dir = "rtl";
+        }
+        else {
+            document.documentElement.dir = "ltr";
+        }
     }, [selectedLanguage]);
     var value = useMemo(function () {
         return {
