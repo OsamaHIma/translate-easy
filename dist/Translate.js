@@ -1,3 +1,4 @@
+'use client';
 import { __awaiter, __generator } from "tslib";
 import * as React from "react";
 import { useState, useEffect } from "react";

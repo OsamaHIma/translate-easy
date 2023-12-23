@@ -1,3 +1,4 @@
+'use client';
 import React, { createContext, useContext, useMemo, useState, useEffect, } from "react";
 /**
  * Represents a language with a code and name.
