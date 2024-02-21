@@ -3,7 +3,6 @@ import { __awaiter, __generator } from "tslib";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "./LanguageContext";
-import updateJSONFile from "./updateJSONFile";
 /**
  * Props for the Translate component.
  * @typedef {Object} TranslateProps
@@ -59,9 +58,9 @@ export var Translate = function (_a) {
                     return [4 /*yield*/, response.json()];
                 case 3:
                     json = _a.sent();
-                    if (!json[children]) {
-                        // Update JSON file with a new entry
-                        updateJSONFile(jsonPath, children, children);
+                    if (json[children]) {
+                        setTranslatedText(json[children]);
+                        return [2 /*return*/];
                     }
                     _a.label = 4;
                 case 4: return [3 /*break*/, 6];
