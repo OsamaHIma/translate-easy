@@ -2,17 +2,24 @@ import React from "react";
 interface Language {
     code: string;
     name: string;
+    isRtl?: boolean;
 }
 interface LanguageContextValue {
     selectedLanguage: Language;
     handleChangeLanguage: (languageCode: string) => void;
     languages: Language[];
     defaultLanguage: Language;
+    jsonFiles?: {
+        [key: string]: string;
+    };
 }
 interface LanguageProviderProps {
     children: React.ReactNode;
-    languages?: Language[];
+    languages: Language[];
     defaultLanguage: Language;
+    jsonFiles?: {
+        [key: string]: string;
+    };
 }
 /**
  * Represents a language with a code and name.

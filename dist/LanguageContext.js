@@ -1,6 +1,23 @@
 'use client';
 import React, { createContext, useContext, useMemo, useState, useEffect, } from "react";
 /**
+ * Default array of languages.
+ * @type {Language[]}
+ */
+var defaultLanguages = [
+    { code: "ar", name: "العربية" },
+    { code: "en", name: "English" },
+    { code: "fr", name: "Français" },
+    { code: "es", name: "Español" },
+    { code: "de", name: "Deutsch" },
+    { code: "hi", name: "हिन्दी" },
+    { code: "it", name: "Italiano" },
+    { code: "ja", name: "日本語" },
+    { code: "ko", name: "한국어" },
+    { code: "zh-CN", name: "中文（简体）" },
+    { code: "zh-TW", name: "中文（繁體）" },
+];
+/**
  * Represents a language with a code and name.
  * @typedef {Object} Language
  * @property {string} code - The language code.
@@ -44,23 +61,6 @@ export var useLanguage = function () {
     return context;
 };
 /**
- * Default array of languages.
- * @type {Language[]}
- */
-var defaultLanguages = [
-    { code: "ar", name: "العربية" },
-    { code: "en", name: "English" },
-    { code: "fr", name: "Français" },
-    { code: "es", name: "Español" },
-    { code: "de", name: "Deutsch" },
-    { code: "hi", name: "हिन्दी" },
-    { code: "it", name: "Italiano" },
-    { code: "ja", name: "日本語" },
-    { code: "ko", name: "한국어" },
-    { code: "zh-CN", name: "中文（简体）" },
-    { code: "zh-TW", name: "中文（繁體）" },
-];
-/**
  * The provider component for managing language settings.
  * @param {LanguageProviderProps} props - The component props.
  * @returns {JSX.Element} The JSX element.
@@ -81,7 +81,7 @@ var defaultLanguages = [
  * </LanguageProvider>
  */
 export var LanguageProvider = function (_a) {
-    var children = _a.children, _b = _a.languages, languages = _b === void 0 ? defaultLanguages : _b, _c = _a.defaultLanguage, defaultLanguage = _c === void 0 ? { code: "en", name: "English" } : _c;
+    var children = _a.children, _b = _a.languages, languages = _b === void 0 ? defaultLanguages : _b, _c = _a.defaultLanguage, defaultLanguage = _c === void 0 ? { code: "en", name: "English" } : _c, jsonFiles = _a.jsonFiles;
     var _d = useState(function () {
         var storedLanguageCode = typeof window !== "undefined" &&
             window.localStorage.getItem("selectedLanguage");
@@ -108,7 +108,7 @@ export var LanguageProvider = function (_a) {
         if (typeof window !== "undefined" && selectedLanguage.code) {
             window.localStorage.setItem("selectedLanguage", selectedLanguage.code);
         }
-        if (selectedLanguage.code === "ar") {
+        if (selectedLanguage.isRtl === true) {
             document.documentElement.dir = "rtl";
         }
         else {
@@ -120,9 +120,10 @@ export var LanguageProvider = function (_a) {
             selectedLanguage: selectedLanguage,
             handleChangeLanguage: handleChangeLanguage,
             languages: languages,
-            defaultLanguage: defaultLanguage
+            defaultLanguage: defaultLanguage,
+            jsonFiles: jsonFiles
         };
-    }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage]);
+    }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage, jsonFiles]);
     return (React.createElement(LanguageContext.Provider, { value: value }, children));
 };
 //# sourceMappingURL=LanguageContext.js.map
