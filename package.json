@@ -1,6 +1,6 @@
 {
   "name": "translate-easy",
-  "version": "1.2.14",
+  "version": "1.2.15",
   "description": "translate-easy is an easy-to-use NPM package that allows you to integrate Google's Translation API into your web applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
