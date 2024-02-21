@@ -2,6 +2,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "./LanguageContext";
+import updateJSONFile from "./updateJSONFile";
 
 interface TranslateProps {
   children: string;
@@ -67,25 +68,9 @@ export const Translate: React.FC<TranslateProps> = ({
               const response = await fetch(jsonPath);
               if (response.ok) {
                 const json = await response.json();
-                if (json[children]) {
-                  setTranslatedText(json[children]);
-                  localStorage.setItem(storageKey, json[children]);
-                  return;
-                } else {
-                  // If translation not found, create a new entry in the JSON file
-                  json[children] = children;
-                  const updatedResponse = await fetch(jsonPath, {
-                    method: 'PUT', // or 'POST' if needed
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(json),
-                  });
-                  if (updatedResponse.ok) {
-                    setTranslatedText(children);
-                    localStorage.setItem(storageKey, children);
-                    return;
-                  }
+                if (!json[children]) {
+                  // Update JSON file with a new entry
+                  updateJSONFile(jsonPath, children, children);
                 }
               }
             } catch (error) {
