@@ -39,7 +39,7 @@ export var Translate = function (_a) {
                         setTranslatedText(translations[selectedLanguage.code]);
                         return [2 /*return*/];
                     }
-                    storageKey = "".concat(children);
+                    storageKey = "".concat(selectedLanguage.code, "-").concat(children);
                     storedText = localStorage.getItem(storageKey);
                     if (storedText) {
                         setTranslatedText(storedText);

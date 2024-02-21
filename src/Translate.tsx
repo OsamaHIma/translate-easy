@@ -50,7 +50,7 @@ export const Translate: React.FC<TranslateProps> = ({
           return;
         }
 
-        const storageKey = `${children}`;
+        const storageKey = `${selectedLanguage.code}-${children}`;
 
         const storedText = localStorage.getItem(storageKey);
 
