@@ -6,7 +6,6 @@ import { useLanguage } from "./LanguageContext";
 interface TranslateProps {
   children: string;
   translations?: { [key: string]: string };
-  saveToLocalStorage?: boolean;
 }
 
 /**
@@ -31,90 +30,98 @@ interface TranslateProps {
 export const Translate: React.FC<TranslateProps> = ({
   children,
   translations = {},
-  saveToLocalStorage = true,
 }: TranslateProps): JSX.Element => {
-  const { selectedLanguage, defaultLanguage,jsonFiles } = useLanguage();
+  const { selectedLanguage, defaultLanguage, jsonFiles } = useLanguage();
   const [translatedText, setTranslatedText] = useState("");
 
   useEffect(() => {
-    const translateText = async () => {
-      const storageKey = `${children}`;
+    const translateText = React.useMemo(
+      () => async () => {
+        // is it the default text?
+        try {
 
-      const storedText = localStorage.getItem(storageKey);
+          if (selectedLanguage.code === defaultLanguage.code) {
+            setTranslatedText(children);
+            return;
+          }
 
-      if (storedText && saveToLocalStorage) {
-        setTranslatedText(storedText);
-        return;
-      }
+          // is it passed in the translations prop?
+          if (translations[selectedLanguage.code]) {
+            setTranslatedText(translations[selectedLanguage.code]);
+            return;
+          }
 
-      if (selectedLanguage.code === defaultLanguage.code) {
-        setTranslatedText(children);
-        return;
-      }
+          const storageKey = `${children}`;
 
-      if (translations[selectedLanguage.code]) {
-        setTranslatedText(translations[selectedLanguage.code]);
-        if (saveToLocalStorage) {
-          localStorage.setItem(storageKey, translations[selectedLanguage.code]);
+          const storedText = localStorage.getItem(storageKey);
+
+          if (storedText) {
+            setTranslatedText(storedText);
+            return;
+          }
+
+          // Check if JSON file path exists for the selected language
+          if (jsonFiles) {
+            const jsonPath = jsonFiles[selectedLanguage.code];
+            if (jsonPath) {
+              try {
+                const response = await fetch(jsonPath);
+                if (response.ok) {
+                  const json = await response.json();
+                  if (json[children]) {
+                    setTranslatedText(json[children]);
+                    localStorage.setItem(storageKey, json[children]);
+                    return;
+                  } else {
+                    // If translation not found, create a new entry in the JSON file
+                    json[children] = children;
+                    const updatedResponse = await fetch(jsonPath, {
+                      method: 'PUT', // or 'POST' if needed
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(json),
+                    });
+                    if (updatedResponse.ok) {
+                      setTranslatedText(children);
+                      localStorage.setItem(storageKey, children);
+                      return;
+                    }
+                  }
+                }
+              } catch (error) {
+                console.error("Error loading translation JSON file:", error);
+              }
+            }
+          }
+
+          try {
+            // Fallback to Google Translate
+            const response = await fetch(
+              `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLanguage.code}&dt=t&q=${children}`
+            );
+            const json = await response.json();
+            const translatedText = json[0][0][0];
+            setTranslatedText(translatedText);
+            localStorage.setItem(storageKey, translatedText);
+          } catch (fallbackError) {
+            console.error("Google Translate fallback failed:", fallbackError);
+            setTranslatedText(children);
+          }
+        } catch (error) {
+          console.error("Translation error:", error);
+          // Handle error gracefully, e.g., fallback to original text
+          setTranslatedText(children);
         }
-        return;
-      }
-
-       // Check if JSON file path exists for the selected language
-       if(jsonFiles)
-       {const jsonPath = jsonFiles[selectedLanguage.code];
-       if (jsonPath) {
-         try {
-           const response = await fetch(jsonPath);
-           if (response.ok) {
-             const json = await response.json();
-             if (json[children]) {
-               setTranslatedText(json[children]);
-               localStorage.setItem(storageKey, json[children]);
-               return;
-             } else {
-               // If translation not found, create a new entry in the JSON file
-               json[children] = children;
-               const updatedResponse = await fetch(jsonPath, {
-                 method: 'PUT', // or 'POST' if needed
-                 headers: {
-                   'Content-Type': 'application/json',
-                 },
-                 body: JSON.stringify(json),
-               });
-               if (updatedResponse.ok) {
-                 setTranslatedText(children);
-                 localStorage.setItem(storageKey, children);
-                 return;
-               }
-             }
-           }
-         } catch (error) {
-           console.error("Error loading translation JSON file:", error);
-         }
-       }}
-
-      try {
-        // Fallback to Google Translate
-        const response = await fetch(
-          `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLanguage.code}&dt=t&q=${children}`
-        );
-        const json = await response.json();
-        const translatedText = json[0][0][0];
-        setTranslatedText(translatedText);
-        localStorage.setItem(storageKey, translatedText);
-      } catch (fallbackError) {
-        console.error("Google Translate fallback failed:", fallbackError);
-        setTranslatedText(children);
-      }
-    };
+      },
+      [children, selectedLanguage, translations, defaultLanguage]
+    );
 
     translateText();
   }, [
     children,
     selectedLanguage,
     translations,
-    saveToLocalStorage,
     defaultLanguage,
   ]);
 

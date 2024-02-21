@@ -4,7 +4,6 @@ interface TranslateProps {
     translations?: {
         [key: string]: string;
     };
-    saveToLocalStorage?: boolean;
 }
 /**
  * Props for the Translate component.
