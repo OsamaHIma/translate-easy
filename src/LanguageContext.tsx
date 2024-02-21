@@ -10,19 +10,41 @@ import React, {
 interface Language {
   code: string;
   name: string;
+  isRtl?: boolean;
 }
+
+
+/**
+ * Default array of languages.
+ * @type {Language[]}
+ */
+const defaultLanguages: Language[] = [
+  { code: "ar", name: "العربية" },
+  { code: "en", name: "English" },
+  { code: "fr", name: "Français" },
+  { code: "es", name: "Español" },
+  { code: "de", name: "Deutsch" },
+  { code: "hi", name: "हिन्दी" },
+  { code: "it", name: "Italiano" },
+  { code: "ja", name: "日本語" },
+  { code: "ko", name: "한국어" },
+  { code: "zh-CN", name: "中文（简体）" },
+  { code: "zh-TW", name: "中文（繁體）" },
+];
 
 interface LanguageContextValue {
   selectedLanguage: Language;
   handleChangeLanguage: (languageCode: string) => void;
   languages: Language[];
   defaultLanguage: Language;
+  jsonFiles?: { [key: string]: string };
 }
 
 interface LanguageProviderProps {
   children: React.ReactNode;
-  languages?: Language[];
+  languages: Language[];
   defaultLanguage: Language;
+  jsonFiles?: { [key: string]: string };
 }
 
 /**
@@ -53,13 +75,13 @@ interface LanguageProviderProps {
  * The context for managing language settings.
  * @type {React.Context<LanguageContextValue>}
  */
-export const LanguageContext = createContext<LanguageContextValue>({
+export const LanguageContext: React.Context<LanguageContextValue> = createContext<LanguageContextValue>({
   selectedLanguage: { code: "", name: "" },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleChangeLanguage: () => {},
   languages: [{ code: "", name: "" }],
   defaultLanguage: { code: "", name: "" },
-});
+})
 
 /**
  * Custom hook to access the language context.
@@ -74,24 +96,6 @@ export const useLanguage = (): LanguageContextValue => {
   }
   return context;
 };
-
-/**
- * Default array of languages.
- * @type {Language[]}
- */
-const defaultLanguages: Language[] = [
-  { code: "ar", name: "العربية" },
-  { code: "en", name: "English" },
-  { code: "fr", name: "Français" },
-  { code: "es", name: "Español" },
-  { code: "de", name: "Deutsch" },
-  { code: "hi", name: "हिन्दी" },
-  { code: "it", name: "Italiano" },
-  { code: "ja", name: "日本語" },
-  { code: "ko", name: "한국어" },
-  { code: "zh-CN", name: "中文（简体）" },
-  { code: "zh-TW", name: "中文（繁體）" },
-];
 
 /**
  * The provider component for managing language settings.
@@ -117,7 +121,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
   languages = defaultLanguages,
   defaultLanguage = { code: "en", name: "English" },
-}) => {
+  jsonFiles
+}: LanguageProviderProps): JSX.Element => {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(() => {
     const storedLanguageCode =
       typeof window !== "undefined" &&
@@ -154,7 +159,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       window.localStorage.setItem("selectedLanguage", selectedLanguage.code);
     }
 
-    if (selectedLanguage.code === "ar") {
+    if (selectedLanguage.isRtl === true) {
       document.documentElement.dir = "rtl";
     } else {
       document.documentElement.dir = "ltr";
@@ -167,8 +172,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       handleChangeLanguage,
       languages,
       defaultLanguage,
+      jsonFiles
     };
-  }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage]);
+  }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage, jsonFiles]);
 
   return (
     <LanguageContext.Provider value={value}>

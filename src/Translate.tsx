@@ -27,17 +27,18 @@ interface TranslateProps {
  * // Example 2: Usage with specific translations
  * <Translate translations={{ 'ar': 'مرحبا بالعالم', 'fr': 'Bonjour le monde!' }}>Hello, world!</Translate>
  */
+
 export const Translate: React.FC<TranslateProps> = ({
   children,
   translations = {},
   saveToLocalStorage = true,
-}: TranslateProps) => {
-  const { selectedLanguage, defaultLanguage } = useLanguage();
+}: TranslateProps): JSX.Element => {
+  const { selectedLanguage, defaultLanguage,jsonFiles } = useLanguage();
   const [translatedText, setTranslatedText] = useState("");
 
   useEffect(() => {
     const translateText = async () => {
-      const storageKey = `translatedText_${selectedLanguage.code}_${children}`;
+      const storageKey = `${children}`;
 
       const storedText = localStorage.getItem(storageKey);
 
@@ -58,6 +59,40 @@ export const Translate: React.FC<TranslateProps> = ({
         }
         return;
       }
+
+       // Check if JSON file path exists for the selected language
+       if(jsonFiles)
+       {const jsonPath = jsonFiles[selectedLanguage.code];
+       if (jsonPath) {
+         try {
+           const response = await fetch(jsonPath);
+           if (response.ok) {
+             const json = await response.json();
+             if (json[children]) {
+               setTranslatedText(json[children]);
+               localStorage.setItem(storageKey, json[children]);
+               return;
+             } else {
+               // If translation not found, create a new entry in the JSON file
+               json[children] = children;
+               const updatedResponse = await fetch(jsonPath, {
+                 method: 'PUT', // or 'POST' if needed
+                 headers: {
+                   'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(json),
+               });
+               if (updatedResponse.ok) {
+                 setTranslatedText(children);
+                 localStorage.setItem(storageKey, children);
+                 return;
+               }
+             }
+           }
+         } catch (error) {
+           console.error("Error loading translation JSON file:", error);
+         }
+       }}
 
       try {
         // Fallback to Google Translate
@@ -83,5 +118,5 @@ export const Translate: React.FC<TranslateProps> = ({
     defaultLanguage,
   ]);
 
-  return <>{translatedText.toString() || children}</>;
+  return <>{translatedText.toString() || children || ''}</>;
 };
