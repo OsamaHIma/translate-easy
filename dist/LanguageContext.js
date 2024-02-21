@@ -108,7 +108,7 @@ export var LanguageProvider = function (_a) {
         if (typeof window !== "undefined" && selectedLanguage.code) {
             window.localStorage.setItem("selectedLanguage", selectedLanguage.code);
         }
-        if (selectedLanguage.isRtl === true) {
+        if (selectedLanguage.isRtl === true || selectedLanguage.code === 'ar') {
             document.documentElement.dir = "rtl";
         }
         else {

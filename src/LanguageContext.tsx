@@ -159,7 +159,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       window.localStorage.setItem("selectedLanguage", selectedLanguage.code);
     }
 
-    if (selectedLanguage.isRtl === true) {
+    if (selectedLanguage.isRtl === true||selectedLanguage.code === 'ar') {
       document.documentElement.dir = "rtl";
     } else {
       document.documentElement.dir = "ltr";
