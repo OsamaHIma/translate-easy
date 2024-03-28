@@ -78,7 +78,7 @@ export const Translate: React.FC<TranslateProps> = ({
           }
         }
 
-        if (useGoogleTranslate) {
+        if (useGoogleTranslate === true) {
           try {
             // Fallback to Google Translate
             const response = await fetch(
