@@ -30,7 +30,7 @@ export var Translate = function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 11, , 12]);
-                    if (selectedLanguage.code === defaultLanguage.code) {
+                    if (selectedLanguage.code === (defaultLanguage === null || defaultLanguage === void 0 ? void 0 : defaultLanguage.code)) {
                         setTranslatedText(children);
                         return [2 /*return*/];
                     }

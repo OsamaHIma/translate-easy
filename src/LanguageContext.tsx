@@ -35,15 +35,15 @@ const defaultLanguages: Language[] = [
 interface LanguageContextValue {
   selectedLanguage: Language;
   handleChangeLanguage: (languageCode: string) => void;
-  languages: Language[];
-  defaultLanguage: Language;
+  languages?: Language[];
+  defaultLanguage?: Language;
   jsonFiles?: { [key: string]: string };
 }
 
 interface LanguageProviderProps {
   children: React.ReactNode;
-  languages: Language[];
-  defaultLanguage: Language;
+  languages?: Language[];
+  defaultLanguage?: Language;
   jsonFiles?: { [key: string]: string };
 }
 

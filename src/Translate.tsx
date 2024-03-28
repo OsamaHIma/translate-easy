@@ -39,7 +39,7 @@ export const Translate: React.FC<TranslateProps> = ({
       // is it the default text?
       try {
 
-        if (selectedLanguage.code === defaultLanguage.code) {
+        if (selectedLanguage.code === defaultLanguage?.code) {
           setTranslatedText(children);
           return;
         }
