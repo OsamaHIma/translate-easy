@@ -12,10 +12,12 @@ interface LanguageContextValue {
     jsonFiles?: {
         [key: string]: string;
     };
+    useGoogleTranslate?: boolean;
 }
 interface LanguageProviderProps {
     children: React.ReactNode;
     languages?: Language[];
+    useGoogleTranslate?: boolean;
     defaultLanguage?: Language;
     jsonFiles?: {
         [key: string]: string;

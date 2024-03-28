@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "./LanguageContext";
@@ -31,14 +31,14 @@ export const Translate: React.FC<TranslateProps> = ({
   children,
   translations = {},
 }: TranslateProps): JSX.Element => {
-  const { selectedLanguage, defaultLanguage, jsonFiles } = useLanguage();
+  const { selectedLanguage, defaultLanguage, jsonFiles, useGoogleTranslate } =
+    useLanguage();
   const [translatedText, setTranslatedText] = useState("");
 
   const translateText = React.useMemo(
     () => async () => {
       // is it the default text?
       try {
-
         if (selectedLanguage.code === defaultLanguage?.code) {
           setTranslatedText(children);
           return;
@@ -78,18 +78,20 @@ export const Translate: React.FC<TranslateProps> = ({
           }
         }
 
-        try {
-          // Fallback to Google Translate
-          const response = await fetch(
-            `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLanguage.code}&dt=t&q=${children}`
-          );
-          const json = await response.json();
-          const translatedText = json[0][0][0];
-          setTranslatedText(translatedText);
-          localStorage.setItem(storageKey, translatedText);
-        } catch (fallbackError) {
-          console.error("Google Translate fallback failed:", fallbackError);
-          setTranslatedText(children);
+        if (useGoogleTranslate) {
+          try {
+            // Fallback to Google Translate
+            const response = await fetch(
+              `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLanguage.code}&dt=t&q=${children}`
+            );
+            const json = await response.json();
+            const translatedText = json[0][0][0];
+            setTranslatedText(translatedText);
+            localStorage.setItem(storageKey, translatedText);
+          } catch (fallbackError) {
+            console.error("Google Translate fallback failed:", fallbackError);
+            setTranslatedText(children);
+          }
         }
       } catch (error) {
         console.error("Translation error:", error);
@@ -104,5 +106,5 @@ export const Translate: React.FC<TranslateProps> = ({
     translateText();
   }, [translateText]);
 
-  return <>{translatedText.toString() || children || ''}</>;
+  return <>{translatedText.toString() || children || ""}</>;
 };

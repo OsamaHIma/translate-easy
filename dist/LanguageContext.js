@@ -81,8 +81,8 @@ export var useLanguage = function () {
  * </LanguageProvider>
  */
 export var LanguageProvider = function (_a) {
-    var children = _a.children, _b = _a.languages, languages = _b === void 0 ? defaultLanguages : _b, _c = _a.defaultLanguage, defaultLanguage = _c === void 0 ? { code: "en", name: "English" } : _c, jsonFiles = _a.jsonFiles;
-    var _d = useState(function () {
+    var children = _a.children, _b = _a.languages, languages = _b === void 0 ? defaultLanguages : _b, _c = _a.defaultLanguage, defaultLanguage = _c === void 0 ? { code: "en", name: "English" } : _c, jsonFiles = _a.jsonFiles, _d = _a.useGoogleTranslate, useGoogleTranslate = _d === void 0 ? true : _d;
+    var _e = useState(function () {
         var storedLanguageCode = typeof window !== "undefined" &&
             window.localStorage.getItem("selectedLanguage");
         if (storedLanguageCode) {
@@ -92,7 +92,7 @@ export var LanguageProvider = function (_a) {
             }
         }
         return defaultLanguage;
-    }), selectedLanguage = _d[0], setSelectedLanguage = _d[1];
+    }), selectedLanguage = _e[0], setSelectedLanguage = _e[1];
     /**
      * Function to change the selected language.
      * @param {string} languageCode - The code of the language to set.
@@ -121,9 +121,10 @@ export var LanguageProvider = function (_a) {
             handleChangeLanguage: handleChangeLanguage,
             languages: languages,
             defaultLanguage: defaultLanguage,
-            jsonFiles: jsonFiles
+            jsonFiles: jsonFiles,
+            useGoogleTranslate: useGoogleTranslate
         };
-    }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage, jsonFiles]);
+    }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage, jsonFiles, useGoogleTranslate]);
     return (React.createElement(LanguageContext.Provider, { value: value }, children));
 };
 //# sourceMappingURL=LanguageContext.js.map

@@ -38,11 +38,13 @@ interface LanguageContextValue {
   languages?: Language[];
   defaultLanguage?: Language;
   jsonFiles?: { [key: string]: string };
+  useGoogleTranslate?: boolean;
 }
 
 interface LanguageProviderProps {
   children: React.ReactNode;
   languages?: Language[];
+  useGoogleTranslate?: boolean;
   defaultLanguage?: Language;
   jsonFiles?: { [key: string]: string };
 }
@@ -121,7 +123,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
   languages = defaultLanguages,
   defaultLanguage = { code: "en", name: "English" },
-  jsonFiles
+  jsonFiles,
+  useGoogleTranslate = true
 }: LanguageProviderProps): JSX.Element => {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(() => {
     const storedLanguageCode =
@@ -172,9 +175,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       handleChangeLanguage,
       languages,
       defaultLanguage,
-      jsonFiles
+      jsonFiles,
+      useGoogleTranslate
     };
-  }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage, jsonFiles]);
+  }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage, jsonFiles,useGoogleTranslate]);
 
   return (
     <LanguageContext.Provider value={value}>
