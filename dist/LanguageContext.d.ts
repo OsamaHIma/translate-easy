@@ -8,7 +8,8 @@ interface LanguageContextValue {
     selectedLanguage: Language;
     handleChangeLanguage: (languageCode: string) => void;
     languages?: Language[];
-    defaultLanguage?: Language;
+    userSelectedLanguage?: Language;
+    developmentLanguage?: Language;
     jsonFiles?: {
         [key: string]: string;
     };
@@ -18,31 +19,28 @@ interface LanguageProviderProps {
     children: React.ReactNode;
     languages?: Language[];
     useGoogleTranslate?: boolean;
-    defaultLanguage?: Language;
+    userSelectedLanguage?: Language;
+    developmentLanguage?: Language;
     jsonFiles?: {
         [key: string]: string;
     };
 }
-/**
- * Represents a language with a code and name.
- * @typedef {Object} Language
- * @property {string} code - The language code.
- * @property {string} name - The language name.
- */
 /**
  * Represents the value of the LanguageContext.
  * @typedef {Object} LanguageContextValue
  * @property {Language} selectedLanguage - The selected language.
  * @property {(languageCode: string) => void} handleChangeLanguage - A function to change the selected language.
  * @property {Language[]} languages - An array of available languages.
- * @property {Language} defaultLanguage - The default language.
+ * @property {Language} userSelectedLanguage - The language selected by the user during runtime.
+ * @property {Language} developmentLanguage - The language used during development.
  */
 /**
  * Represents the properties of the LanguageProvider component.
  * @typedef {Object} LanguageProviderProps
  * @property {ReactNode} children - The children components.
  * @property {Language[]} [languages] - An optional array of available languages.
- * @property {Language} defaultLanguage - The default language.
+ * @property {Language} userSelectedLanguage - The language selected by the user during runtime.
+ * @property {Language} developmentLanguage - The language used during development.
  */
 /**
  * The context for managing language settings.
@@ -58,21 +56,6 @@ export declare const useLanguage: () => LanguageContextValue;
  * The provider component for managing language settings.
  * @param {LanguageProviderProps} props - The component props.
  * @returns {JSX.Element} The JSX element.
- * @example
- * // Example 1: Basic usage with default settings
- * <LanguageProvider defaultLanguage={{ code: "en", name: "English" }}>
- *   <App />
- * </LanguageProvider>
- *
- * // Example 2: Providing custom languages and default language
- * const customLanguages = [
- *   { code: "es", name: "Español" },
- *   { code: "fr", name: "Français" },
- *   { code: "de", name: "Deutsch" },
- * ];
- * <LanguageProvider languages={customLanguages} defaultLanguage={{ code: "es", name: "Español" }}>
- *   <App />
- * </LanguageProvider>
  */
 export declare const LanguageProvider: React.FC<LanguageProviderProps>;
 export {};

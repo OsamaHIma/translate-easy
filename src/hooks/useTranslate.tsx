@@ -29,7 +29,7 @@ export const useTranslate = (): ((
   text: string,
   translations?: { [key: string]: string }
 ) => string) => {
-  const { selectedLanguage, defaultLanguage, jsonFiles, useGoogleTranslate } =
+  const { selectedLanguage, developmentLanguage, jsonFiles, useGoogleTranslate } =
     useLanguage();
 
   return (
@@ -41,7 +41,7 @@ export const useTranslate = (): ((
     useEffect(() => {
       const translateText = async () => {
         try {
-          if (selectedLanguage.code === defaultLanguage?.code) {
+          if (selectedLanguage.code === developmentLanguage?.code) {
             setTranslatedText(text);
             return;
           }
@@ -98,7 +98,7 @@ export const useTranslate = (): ((
       };
 
       translateText();
-    }, [text, selectedLanguage, translations, defaultLanguage]);
+    }, [text, selectedLanguage, translations, developmentLanguage]);
 
     return translatedText.toString() || text || "";
   };

@@ -30,7 +30,7 @@ function App() {
 }
 ```
 
-you can pass your languages to LanguageProvider and overwrite the default languages. You can pass a defaultLanguage prop if the default language (the languge you used while developing the website ) is not English.
+you can pass your languages to LanguageProvider and overwrite the default languages. You can pass a defaultLanguage prop if the default language (the language you used while developing the website ) is not English to prevent translating the original text.
 
 ```jsx
 import { LanguageProvider } from "translate-easy";

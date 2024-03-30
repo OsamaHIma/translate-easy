@@ -31,7 +31,7 @@ export const Translate: React.FC<TranslateProps> = ({
   children,
   translations = {},
 }: TranslateProps): JSX.Element => {
-  const { selectedLanguage, defaultLanguage, jsonFiles, useGoogleTranslate } =
+  const { selectedLanguage, developmentLanguage, jsonFiles, useGoogleTranslate } =
     useLanguage();
   const [translatedText, setTranslatedText] = useState("");
 
@@ -39,7 +39,7 @@ export const Translate: React.FC<TranslateProps> = ({
     () => async () => {
       // is it the default text?
       try {
-        if (selectedLanguage.code === defaultLanguage?.code) {
+        if (selectedLanguage.code === developmentLanguage?.code) {
           setTranslatedText(children);
           return;
         }
@@ -99,7 +99,7 @@ export const Translate: React.FC<TranslateProps> = ({
         setTranslatedText(children);
       }
     },
-    [children, selectedLanguage, translations, defaultLanguage]
+    [children, selectedLanguage, translations, developmentLanguage]
   );
 
   useEffect(() => {

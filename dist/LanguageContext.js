@@ -1,11 +1,11 @@
-'use client';
+"use client";
 import React, { createContext, useContext, useMemo, useState, useEffect, } from "react";
 /**
  * Default array of languages.
  * @type {Language[]}
  */
 var defaultLanguages = [
-    { code: "ar", name: "العربية" },
+    { code: "ar", name: "العربية", isRtl: true },
     { code: "en", name: "English" },
     { code: "fr", name: "Français" },
     { code: "es", name: "Español" },
@@ -18,25 +18,21 @@ var defaultLanguages = [
     { code: "zh-TW", name: "中文（繁體）" },
 ];
 /**
- * Represents a language with a code and name.
- * @typedef {Object} Language
- * @property {string} code - The language code.
- * @property {string} name - The language name.
- */
-/**
  * Represents the value of the LanguageContext.
  * @typedef {Object} LanguageContextValue
  * @property {Language} selectedLanguage - The selected language.
  * @property {(languageCode: string) => void} handleChangeLanguage - A function to change the selected language.
  * @property {Language[]} languages - An array of available languages.
- * @property {Language} defaultLanguage - The default language.
+ * @property {Language} userSelectedLanguage - The language selected by the user during runtime.
+ * @property {Language} developmentLanguage - The language used during development.
  */
 /**
  * Represents the properties of the LanguageProvider component.
  * @typedef {Object} LanguageProviderProps
  * @property {ReactNode} children - The children components.
  * @property {Language[]} [languages] - An optional array of available languages.
- * @property {Language} defaultLanguage - The default language.
+ * @property {Language} userSelectedLanguage - The language selected by the user during runtime.
+ * @property {Language} developmentLanguage - The language used during development.
  */
 /**
  * The context for managing language settings.
@@ -47,7 +43,8 @@ export var LanguageContext = createContext({
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     handleChangeLanguage: function () { },
     languages: [{ code: "", name: "" }],
-    defaultLanguage: { code: "", name: "" }
+    userSelectedLanguage: { code: "", name: "" },
+    developmentLanguage: { code: "", name: "" }
 });
 /**
  * Custom hook to access the language context.
@@ -64,25 +61,11 @@ export var useLanguage = function () {
  * The provider component for managing language settings.
  * @param {LanguageProviderProps} props - The component props.
  * @returns {JSX.Element} The JSX element.
- * @example
- * // Example 1: Basic usage with default settings
- * <LanguageProvider defaultLanguage={{ code: "en", name: "English" }}>
- *   <App />
- * </LanguageProvider>
- *
- * // Example 2: Providing custom languages and default language
- * const customLanguages = [
- *   { code: "es", name: "Español" },
- *   { code: "fr", name: "Français" },
- *   { code: "de", name: "Deutsch" },
- * ];
- * <LanguageProvider languages={customLanguages} defaultLanguage={{ code: "es", name: "Español" }}>
- *   <App />
- * </LanguageProvider>
  */
 export var LanguageProvider = function (_a) {
-    var children = _a.children, _b = _a.languages, languages = _b === void 0 ? defaultLanguages : _b, _c = _a.defaultLanguage, defaultLanguage = _c === void 0 ? { code: "en", name: "English" } : _c, jsonFiles = _a.jsonFiles, _d = _a.useGoogleTranslate, useGoogleTranslate = _d === void 0 ? true : _d;
-    var _e = useState(function () {
+    var children = _a.children, _b = _a.languages, languages = _b === void 0 ? defaultLanguages : _b, _c = _a.userSelectedLanguage, userSelectedLanguage = _c === void 0 ? { code: "en", name: "English" } : _c, _d = _a.developmentLanguage, developmentLanguage = _d === void 0 ? { code: "en", name: "English" } : _d, // Default to English for development
+    jsonFiles = _a.jsonFiles, _e = _a.useGoogleTranslate, useGoogleTranslate = _e === void 0 ? true : _e;
+    var _f = useState(function () {
         var storedLanguageCode = typeof window !== "undefined" &&
             window.localStorage.getItem("selectedLanguage");
         if (storedLanguageCode) {
@@ -91,8 +74,8 @@ export var LanguageProvider = function (_a) {
                 return storedLanguage;
             }
         }
-        return defaultLanguage;
-    }), selectedLanguage = _e[0], setSelectedLanguage = _e[1];
+        return userSelectedLanguage || developmentLanguage;
+    }), selectedLanguage = _f[0], setSelectedLanguage = _f[1];
     /**
      * Function to change the selected language.
      * @param {string} languageCode - The code of the language to set.
@@ -108,7 +91,7 @@ export var LanguageProvider = function (_a) {
         if (typeof window !== "undefined" && selectedLanguage.code) {
             window.localStorage.setItem("selectedLanguage", selectedLanguage.code);
         }
-        if (selectedLanguage.isRtl === true || selectedLanguage.code === 'ar') {
+        if (selectedLanguage.isRtl === true) {
             document.documentElement.dir = "rtl";
         }
         else {
@@ -120,11 +103,20 @@ export var LanguageProvider = function (_a) {
             selectedLanguage: selectedLanguage,
             handleChangeLanguage: handleChangeLanguage,
             languages: languages,
-            defaultLanguage: defaultLanguage,
+            userSelectedLanguage: userSelectedLanguage,
+            developmentLanguage: developmentLanguage,
             jsonFiles: jsonFiles,
             useGoogleTranslate: useGoogleTranslate
         };
-    }, [selectedLanguage, handleChangeLanguage, languages, defaultLanguage, jsonFiles, useGoogleTranslate]);
+    }, [
+        selectedLanguage,
+        handleChangeLanguage,
+        languages,
+        userSelectedLanguage,
+        developmentLanguage,
+        jsonFiles,
+        useGoogleTranslate,
+    ]);
     return (React.createElement(LanguageContext.Provider, { value: value }, children));
 };
 //# sourceMappingURL=LanguageContext.js.map

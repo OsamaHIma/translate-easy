@@ -22,7 +22,7 @@ import { useLanguage } from "./LanguageContext";
  */
 export var Translate = function (_a) {
     var children = _a.children, _b = _a.translations, translations = _b === void 0 ? {} : _b;
-    var _c = useLanguage(), selectedLanguage = _c.selectedLanguage, defaultLanguage = _c.defaultLanguage, jsonFiles = _c.jsonFiles, useGoogleTranslate = _c.useGoogleTranslate;
+    var _c = useLanguage(), selectedLanguage = _c.selectedLanguage, developmentLanguage = _c.developmentLanguage, jsonFiles = _c.jsonFiles, useGoogleTranslate = _c.useGoogleTranslate;
     var _d = useState(""), translatedText = _d[0], setTranslatedText = _d[1];
     var translateText = React.useMemo(function () { return function () { return __awaiter(void 0, void 0, void 0, function () {
         var storageKey, storedText, jsonPath, response, json, error_1, response, json, translatedText_1, fallbackError_1, error_2;
@@ -30,7 +30,7 @@ export var Translate = function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 12, , 13]);
-                    if (selectedLanguage.code === (defaultLanguage === null || defaultLanguage === void 0 ? void 0 : defaultLanguage.code)) {
+                    if (selectedLanguage.code === (developmentLanguage === null || developmentLanguage === void 0 ? void 0 : developmentLanguage.code)) {
                         setTranslatedText(children);
                         return [2 /*return*/];
                     }
@@ -98,7 +98,7 @@ export var Translate = function (_a) {
                 case 13: return [2 /*return*/];
             }
         });
-    }); }; }, [children, selectedLanguage, translations, defaultLanguage]);
+    }); }; }, [children, selectedLanguage, translations, developmentLanguage]);
     useEffect(function () {
         translateText();
     }, [translateText]);

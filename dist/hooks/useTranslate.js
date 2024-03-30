@@ -23,7 +23,7 @@ import { useLanguage } from "../LanguageContext";
  * @returns {string} The translated text.
  */
 export var useTranslate = function () {
-    var _a = useLanguage(), selectedLanguage = _a.selectedLanguage, defaultLanguage = _a.defaultLanguage, jsonFiles = _a.jsonFiles, useGoogleTranslate = _a.useGoogleTranslate;
+    var _a = useLanguage(), selectedLanguage = _a.selectedLanguage, developmentLanguage = _a.developmentLanguage, jsonFiles = _a.jsonFiles, useGoogleTranslate = _a.useGoogleTranslate;
     return function (text, translations) {
         if (translations === void 0) { translations = {}; }
         var _a = useState(""), translatedText = _a[0], setTranslatedText = _a[1];
@@ -34,7 +34,7 @@ export var useTranslate = function () {
                     switch (_a.label) {
                         case 0:
                             _a.trys.push([0, 12, , 13]);
-                            if (selectedLanguage.code === (defaultLanguage === null || defaultLanguage === void 0 ? void 0 : defaultLanguage.code)) {
+                            if (selectedLanguage.code === (developmentLanguage === null || developmentLanguage === void 0 ? void 0 : developmentLanguage.code)) {
                                 setTranslatedText(text);
                                 return [2 /*return*/];
                             }
@@ -102,7 +102,7 @@ export var useTranslate = function () {
                 });
             }); };
             translateText();
-        }, [text, selectedLanguage, translations, defaultLanguage]);
+        }, [text, selectedLanguage, translations, developmentLanguage]);
         return translatedText.toString() || text || "";
     };
 };
