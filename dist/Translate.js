@@ -69,7 +69,7 @@ export var Translate = function (_a) {
                     console.error("Error loading translation JSON file:", error_1);
                     return [3 /*break*/, 6];
                 case 6:
-                    if (!useGoogleTranslate) return [3 /*break*/, 11];
+                    if (!(useGoogleTranslate === true)) return [3 /*break*/, 11];
                     _a.label = 7;
                 case 7:
                     _a.trys.push([7, 10, , 11]);
