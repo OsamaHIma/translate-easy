@@ -57,5 +57,5 @@ export declare const useLanguage: () => LanguageContextValue;
  * @param {LanguageProviderProps} props - The component props.
  * @returns {JSX.Element} The JSX element.
  */
-export declare const LanguageProvider: React.FC<LanguageProviderProps>;
+export declare const LanguageProvider: ({ children, languages, userSelectedLanguage, developmentLanguage, jsonFiles, useGoogleTranslate, }: LanguageProviderProps) => JSX.Element;
 export {};

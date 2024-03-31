@@ -27,10 +27,7 @@ interface TranslateProps {
  * <Translate translations={{ 'ar': 'مرحبا بالعالم', 'fr': 'Bonjour le monde!' }}>Hello, world!</Translate>
  */
 
-export const Translate: React.FC<TranslateProps> = ({
-  children,
-  translations = {},
-}: TranslateProps): JSX.Element => {
+export const Translate = ({ children, translations = {} }: TranslateProps) => {
   const {
     selectedLanguage,
     developmentLanguage,

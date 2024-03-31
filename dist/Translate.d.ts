@@ -1,4 +1,4 @@
-import * as React from "react";
+/// <reference types="react" />
 interface TranslateProps {
     children: string;
     translations?: {
@@ -22,5 +22,5 @@ interface TranslateProps {
  * // Example 2: Usage with specific translations
  * <Translate translations={{ 'ar': 'مرحبا بالعالم', 'fr': 'Bonjour le monde!' }}>Hello, world!</Translate>
  */
-export declare const Translate: React.FC<TranslateProps>;
+export declare const Translate: ({ children, translations }: TranslateProps) => JSX.Element;
 export {};

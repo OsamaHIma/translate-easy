@@ -103,14 +103,14 @@ export const useLanguage = (): LanguageContextValue => {
  * @param {LanguageProviderProps} props - The component props.
  * @returns {JSX.Element} The JSX element.
  */
-export const LanguageProvider: React.FC<LanguageProviderProps> = ({
+export const LanguageProvider = ({
   children,
   languages = defaultLanguages,
   userSelectedLanguage = { code: "en", name: "English" },
   developmentLanguage = { code: "en", name: "English" }, // Default to English for development
   jsonFiles,
   useGoogleTranslate = true,
-}: LanguageProviderProps): JSX.Element => {
+}: LanguageProviderProps) => {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(() => {
     const storedLanguageCode =
       typeof window !== "undefined" &&
