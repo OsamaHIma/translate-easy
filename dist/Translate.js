@@ -25,7 +25,7 @@ export var Translate = function (_a) {
     var _c = useLanguage(), selectedLanguage = _c.selectedLanguage, developmentLanguage = _c.developmentLanguage, jsonFiles = _c.jsonFiles, useGoogleTranslate = _c.useGoogleTranslate;
     var _d = useState(""), translatedText = _d[0], setTranslatedText = _d[1];
     var translateText = React.useMemo(function () { return function () { return __awaiter(void 0, void 0, void 0, function () {
-        var storageKey, storedText, jsonPath, response, json, error_1, response, json, translatedText_1, fallbackError_1, error_2;
+        var jsonPath, response, json, error_1, storageKey, storedText, response, json, translatedText_1, fallbackError_1, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -37,12 +37,6 @@ export var Translate = function (_a) {
                     // is it passed in the translations prop?
                     if (translations[selectedLanguage.code]) {
                         setTranslatedText(translations[selectedLanguage.code]);
-                        return [2 /*return*/];
-                    }
-                    storageKey = "".concat(selectedLanguage.code, "-").concat(children);
-                    storedText = localStorage.getItem(storageKey);
-                    if (storedText) {
-                        setTranslatedText(storedText);
                         return [2 /*return*/];
                     }
                     if (!jsonFiles) return [3 /*break*/, 6];
@@ -69,6 +63,12 @@ export var Translate = function (_a) {
                     console.error("Error loading translation JSON file:", error_1);
                     return [3 /*break*/, 6];
                 case 6:
+                    storageKey = "".concat(selectedLanguage.code, "-").concat(children);
+                    storedText = localStorage.getItem(storageKey);
+                    if (storedText) {
+                        setTranslatedText(storedText);
+                        return [2 /*return*/];
+                    }
                     if (!(useGoogleTranslate === true)) return [3 /*break*/, 11];
                     _a.label = 7;
                 case 7:

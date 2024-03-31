@@ -31,8 +31,12 @@ export const Translate: React.FC<TranslateProps> = ({
   children,
   translations = {},
 }: TranslateProps): JSX.Element => {
-  const { selectedLanguage, developmentLanguage, jsonFiles, useGoogleTranslate } =
-    useLanguage();
+  const {
+    selectedLanguage,
+    developmentLanguage,
+    jsonFiles,
+    useGoogleTranslate,
+  } = useLanguage();
   const [translatedText, setTranslatedText] = useState("");
 
   const translateText = React.useMemo(
@@ -49,16 +53,6 @@ export const Translate: React.FC<TranslateProps> = ({
           setTranslatedText(translations[selectedLanguage.code]);
           return;
         }
-
-        const storageKey = `${selectedLanguage.code}-${children}`;
-
-        const storedText = localStorage.getItem(storageKey);
-
-        if (storedText) {
-          setTranslatedText(storedText);
-          return;
-        }
-
         // Check if JSON file path exists for the selected language
         if (jsonFiles) {
           const jsonPath = jsonFiles[selectedLanguage.code];
@@ -76,6 +70,14 @@ export const Translate: React.FC<TranslateProps> = ({
               console.error("Error loading translation JSON file:", error);
             }
           }
+        }
+        const storageKey = `${selectedLanguage.code}-${children}`;
+
+        const storedText = localStorage.getItem(storageKey);
+
+        if (storedText) {
+          setTranslatedText(storedText);
+          return;
         }
 
         if (useGoogleTranslate === true) {
