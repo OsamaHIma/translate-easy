@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageContext";
 
 /**
@@ -24,7 +25,10 @@ import { useLanguage } from "../LanguageContext";
  */
 
 
-export const useTranslate = (): ((text: string, translations?: { [key: string]: string }) => string) => {
+export const useTranslate = (): ((
+  text: string,
+  translations?: { [key: string]: string }
+) => string) => {
   const { selectedLanguage, developmentLanguage, jsonFiles, useGoogleTranslate } =
     useLanguage();
 
@@ -32,54 +36,70 @@ export const useTranslate = (): ((text: string, translations?: { [key: string]: 
     text: string,
     translations: { [key: string]: string } = {}
   ): string => {
-    if (selectedLanguage.code === developmentLanguage?.code) {
-      return text;
-    }
+    const [translatedText, setTranslatedText] = useState<string>("");
 
-    if (translations[selectedLanguage.code]) {
-      return translations[selectedLanguage.code];
-    }
+    useEffect(() => {
+      const translateText = async () => {
+        try {
+          if (selectedLanguage.code === developmentLanguage?.code) {
+            setTranslatedText(text);
+            return;
+          }
 
-    const storageKey = `${selectedLanguage.code}-${text}`;
-    const storedText = localStorage.getItem(storageKey);
+          if (translations[selectedLanguage.code]) {
+            setTranslatedText(translations[selectedLanguage.code]);
+            return;
+          }
 
-    if (storedText) {
-      return storedText;
-    }
+          const storageKey = `${selectedLanguage.code}-${text}`;
+          const storedText = localStorage.getItem(storageKey);
 
-    const translateText = async (): Promise<string> => {
-      try {
-        if (jsonFiles) {
-          const jsonPath = jsonFiles[selectedLanguage.code];
-          if (jsonPath) {
-            const response = await fetch(jsonPath);
-            if (response.ok) {
-              const json = await response.json();
-              if (json[text]) {
-                localStorage.setItem(storageKey, json[text]);
-                return json[text];
+          if (storedText) {
+            setTranslatedText(storedText);
+            return;
+          }
+
+          if (jsonFiles) {
+            const jsonPath = jsonFiles[selectedLanguage.code];
+            if (jsonPath) {
+              try {
+                const response = await fetch(jsonPath);
+                if (response.ok) {
+                  const json = await response.json();
+                  if (json[text]) {
+                    setTranslatedText(json[text]);
+                    return;
+                  }
+                }
+              } catch (error) {
+                console.error("Error loading translation JSON file:", error);
               }
             }
           }
+
+          if (useGoogleTranslate === true) {
+            try {
+              const response = await fetch(
+                `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLanguage.code}&dt=t&q=${text}`
+              );
+              const json = await response.json();
+              const translatedText = json[0][0][0];
+              setTranslatedText(translatedText);
+              localStorage.setItem(storageKey, translatedText);
+            } catch (fallbackError) {
+              console.error("Google Translate fallback failed:", fallbackError);
+              setTranslatedText(text);
+            }
+          }
+        } catch (error) {
+          console.error("Translation error:", error);
+          setTranslatedText(text);
         }
+      };
 
-        if (useGoogleTranslate === true) {
-          const response = await fetch(
-            `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLanguage.code}&dt=t&q=${text}`
-          );
-          const json = await response.json();
-          const translatedText = json[0][0][0];
-          localStorage.setItem(storageKey, translatedText);
-          return translatedText;
-        }
-      } catch (error) {
-        console.error("Translation error:", error);
-      }
-      return text;
-    };
+      translateText();
+    }, [text, selectedLanguage, translations, developmentLanguage]);
 
-    translateText();
-
-    return text;
+    return translatedText.toString() || text || "";
   };
 };

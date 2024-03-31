@@ -21,4 +21,4 @@
  */
 export declare const useTranslate: () => (text: string, translations?: {
     [key: string]: string;
-} | undefined) => string;
+} | undefined) => Promise<string>;
