@@ -3,13 +3,13 @@ interface TranslateProps {
     children: string;
     translations?: {
         [key: string]: string;
-    };
+    }[];
 }
 /**
  * Props for the Translate component.
  * @typedef {Object} TranslateProps
  * @property {string} children - The text to be translated.
- * @property {{ [key: string]: string }} [translations] - Optional translations for specific languages.
+ * @property {{ [key: string]: string }[]} [translations] - Optional translations for specific languages.
  */
 /**
  * Component for translating text based on the selected language.
@@ -20,7 +20,7 @@ interface TranslateProps {
  * <Translate>Hello, world!</Translate>
  *
  * // Example 2: Usage with specific translations
- * <Translate translations={{ 'ar': 'مرحبا بالعالم', 'fr': 'Bonjour le monde!' }}>Hello, world!</Translate>
+ * <Translate translations={[{ ar: "مرحبا بالعالم" }, { fr: "Bonjour le monde!" }]}>Hello, world!</Translate>
  */
 export declare const Translate: ({ children, translations }: TranslateProps) => JSX.Element;
 export {};

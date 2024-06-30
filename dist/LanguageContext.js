@@ -63,8 +63,7 @@ export var useLanguage = function () {
  * @returns {JSX.Element} The JSX element.
  */
 export var LanguageProvider = function (_a) {
-    var children = _a.children, _b = _a.languages, languages = _b === void 0 ? defaultLanguages : _b, _c = _a.userSelectedLanguage, userSelectedLanguage = _c === void 0 ? { code: "en", name: "English" } : _c, _d = _a.developmentLanguage, developmentLanguage = _d === void 0 ? { code: "en", name: "English" } : _d, // Default to English for development
-    jsonFiles = _a.jsonFiles, _e = _a.useGoogleTranslate, useGoogleTranslate = _e === void 0 ? true : _e;
+    var children = _a.children, _b = _a.languages, languages = _b === void 0 ? defaultLanguages : _b, _c = _a.userSelectedLanguage, userSelectedLanguage = _c === void 0 ? { code: "en", name: "English" } : _c, _d = _a.developmentLanguage, developmentLanguage = _d === void 0 ? { code: "en", name: "English" } : _d, jsonFiles = _a.jsonFiles, _e = _a.useGoogleTranslate, useGoogleTranslate = _e === void 0 ? true : _e;
     var _f = useState(function () {
         var storedLanguageCode = typeof window !== "undefined" &&
             window.localStorage.getItem("selectedLanguage");

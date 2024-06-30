@@ -5,14 +5,14 @@ import { useLanguage } from "./LanguageContext";
 
 interface TranslateProps {
   children: string;
-  translations?: { [key: string]: string };
+  translations?: { [key: string]: string }[];
 }
 
 /**
  * Props for the Translate component.
  * @typedef {Object} TranslateProps
  * @property {string} children - The text to be translated.
- * @property {{ [key: string]: string }} [translations] - Optional translations for specific languages.
+ * @property {{ [key: string]: string }[]} [translations] - Optional translations for specific languages.
  */
 
 /**
@@ -24,10 +24,10 @@ interface TranslateProps {
  * <Translate>Hello, world!</Translate>
  *
  * // Example 2: Usage with specific translations
- * <Translate translations={{ 'ar': 'مرحبا بالعالم', 'fr': 'Bonjour le monde!' }}>Hello, world!</Translate>
+ * <Translate translations={[{ ar: "مرحبا بالعالم" }, { fr: "Bonjour le monde!" }]}>Hello, world!</Translate>
  */
 
-export const Translate = ({ children, translations = {} }: TranslateProps) => {
+export const Translate = ({ children, translations = [] }: TranslateProps) => {
   const {
     selectedLanguage,
     developmentLanguage,
@@ -38,20 +38,20 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
 
   const translateText = React.useMemo(
     () => async () => {
-      // is it the default text?
       try {
         if (selectedLanguage.code === developmentLanguage?.code) {
           setTranslatedText(children);
           return;
         }
 
-        // is it passed in the translations prop?
-        if (translations[selectedLanguage.code]) {
-          setTranslatedText(translations[selectedLanguage.code]);
+        const translationObject = translations.find(
+          (t) => t[selectedLanguage.code]
+        );
+        if (translationObject) {
+          setTranslatedText(translationObject[selectedLanguage.code]);
           return;
         }
 
- // Check if JSON file path exists for the selected language
         if (jsonFiles) {
           const jsonPath = jsonFiles[selectedLanguage.code];
           if (jsonPath) {
@@ -69,7 +69,7 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
             }
           }
         }
-        
+
         const storageKey = `${selectedLanguage.code}-${children}`;
 
         const storedText = localStorage.getItem(storageKey);
@@ -79,10 +79,8 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
           return;
         }
 
-        
         if (useGoogleTranslate === true) {
           try {
-            // Fallback to Google Translate
             const response = await fetch(
               `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${selectedLanguage.code}&dt=t&q=${children}`
             );
@@ -97,7 +95,6 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
         }
       } catch (error) {
         console.error("Translation error:", error);
-        // Handle error gracefully, e.g., fallback to original text
         setTranslatedText(children);
       }
     },
@@ -108,5 +105,5 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
     translateText();
   }, [translateText]);
 
-  return <>{translatedText.toString() || children || ""}</>;
+  return <>{translatedText?.toString() || children || ""}</>;
 };

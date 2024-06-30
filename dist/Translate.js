@@ -7,7 +7,7 @@ import { useLanguage } from "./LanguageContext";
  * Props for the Translate component.
  * @typedef {Object} TranslateProps
  * @property {string} children - The text to be translated.
- * @property {{ [key: string]: string }} [translations] - Optional translations for specific languages.
+ * @property {{ [key: string]: string }[]} [translations] - Optional translations for specific languages.
  */
 /**
  * Component for translating text based on the selected language.
@@ -18,14 +18,14 @@ import { useLanguage } from "./LanguageContext";
  * <Translate>Hello, world!</Translate>
  *
  * // Example 2: Usage with specific translations
- * <Translate translations={{ 'ar': 'مرحبا بالعالم', 'fr': 'Bonjour le monde!' }}>Hello, world!</Translate>
+ * <Translate translations={[{ ar: "مرحبا بالعالم" }, { fr: "Bonjour le monde!" }]}>Hello, world!</Translate>
  */
 export var Translate = function (_a) {
-    var children = _a.children, _b = _a.translations, translations = _b === void 0 ? {} : _b;
+    var children = _a.children, _b = _a.translations, translations = _b === void 0 ? [] : _b;
     var _c = useLanguage(), selectedLanguage = _c.selectedLanguage, developmentLanguage = _c.developmentLanguage, jsonFiles = _c.jsonFiles, useGoogleTranslate = _c.useGoogleTranslate;
     var _d = useState(""), translatedText = _d[0], setTranslatedText = _d[1];
     var translateText = React.useMemo(function () { return function () { return __awaiter(void 0, void 0, void 0, function () {
-        var jsonPath, response, json, error_1, storageKey, storedText, response, json, translatedText_1, fallbackError_1, error_2;
+        var translationObject, jsonPath, response, json, error_1, storageKey, storedText, response, json, translatedText_1, fallbackError_1, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -34,9 +34,9 @@ export var Translate = function (_a) {
                         setTranslatedText(children);
                         return [2 /*return*/];
                     }
-                    // is it passed in the translations prop?
-                    if (translations[selectedLanguage.code]) {
-                        setTranslatedText(translations[selectedLanguage.code]);
+                    translationObject = translations.find(function (t) { return t[selectedLanguage.code]; });
+                    if (translationObject) {
+                        setTranslatedText(translationObject[selectedLanguage.code]);
                         return [2 /*return*/];
                     }
                     if (!jsonFiles) return [3 /*break*/, 6];
@@ -92,7 +92,6 @@ export var Translate = function (_a) {
                 case 12:
                     error_2 = _a.sent();
                     console.error("Translation error:", error_2);
-                    // Handle error gracefully, e.g., fallback to original text
                     setTranslatedText(children);
                     return [3 /*break*/, 13];
                 case 13: return [2 /*return*/];
@@ -102,6 +101,6 @@ export var Translate = function (_a) {
     useEffect(function () {
         translateText();
     }, [translateText]);
-    return React.createElement(React.Fragment, null, translatedText.toString() || children || "");
+    return React.createElement(React.Fragment, null, (translatedText === null || translatedText === void 0 ? void 0 : translatedText.toString()) || children || "");
 };
 //# sourceMappingURL=Translate.js.map

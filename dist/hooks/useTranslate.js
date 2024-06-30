@@ -4,22 +4,31 @@ import { useLanguage } from "../LanguageContext";
 /**
  * Hook for translating text based on the selected language.
  * @param {string} text The text to translate.
- * @param {{ [key: string]: string }} translations (Optional)
+ * @param {{ [key: string]: string }[]} translations (Optional)
  *  Custom translations for the current language.
  * @returns {string} The translated text.
  */
 export var useTranslate = function (text, translations) {
-    if (translations === void 0) { translations = {}; }
+    if (translations === void 0) { translations = []; }
     var _a = useLanguage(), selectedLanguage = _a.selectedLanguage, developmentLanguage = _a.developmentLanguage, jsonFiles = _a.jsonFiles, useGoogleTranslate = _a.useGoogleTranslate;
-    var _b = useState(translations[selectedLanguage.code] || text), translatedText = _b[0], setTranslatedText = _b[1];
+    var getTranslationFromProps = function () {
+        var translationObject = translations.find(function (t) { return t[selectedLanguage.code]; });
+        return translationObject ? translationObject[selectedLanguage.code] : text;
+    };
+    var _b = useState(getTranslationFromProps), translatedText = _b[0], setTranslatedText = _b[1];
     useEffect(function () {
         var translateText = function () { return __awaiter(void 0, void 0, void 0, function () {
-            var jsonPath, response, json, error_1, storageKey, storedText, response, json, translatedText_1, error_2;
+            var translationObject, jsonPath, response, json, error_1, storageKey, storedText, response, json, translatedText_1, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (selectedLanguage.code === (developmentLanguage === null || developmentLanguage === void 0 ? void 0 : developmentLanguage.code)) {
                             setTranslatedText(text);
+                            return [2 /*return*/];
+                        }
+                        translationObject = translations.find(function (t) { return t[selectedLanguage.code]; });
+                        if (translationObject) {
+                            setTranslatedText(translationObject[selectedLanguage.code]);
                             return [2 /*return*/];
                         }
                         if (!jsonFiles) return [3 /*break*/, 6];

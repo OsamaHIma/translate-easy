@@ -4,13 +4,13 @@ import { useLanguage } from "../LanguageContext";
 /**
  * Hook for translating text based on the selected language.
  * @param {string} text The text to translate.
- * @param {{ [key: string]: string }} translations (Optional)
+ * @param {{ [key: string]: string }[]} translations (Optional)
  *  Custom translations for the current language.
  * @returns {string} The translated text.
  */
 export const useTranslate = (
   text: string,
-  translations: { [key: string]: string } = {}
+  translations: { [key: string]: string }[] = []
 ) => {
   const {
     selectedLanguage,
@@ -19,9 +19,14 @@ export const useTranslate = (
     useGoogleTranslate,
   } = useLanguage();
 
-  const [translatedText, setTranslatedText] = useState(
-    translations[selectedLanguage.code] || text
-  );
+  const getTranslationFromProps = () => {
+    const translationObject = translations.find(
+      (t) => t[selectedLanguage.code]
+    );
+    return translationObject ? translationObject[selectedLanguage.code] : text;
+  };
+
+  const [translatedText, setTranslatedText] = useState(getTranslationFromProps);
 
   useEffect(() => {
     const translateText = async () => {
@@ -30,7 +35,14 @@ export const useTranslate = (
         return;
       }
 
-      
+      const translationObject = translations.find(
+        (t) => t[selectedLanguage.code]
+      );
+      if (translationObject) {
+        setTranslatedText(translationObject[selectedLanguage.code]);
+        return;
+      }
+
       if (jsonFiles) {
         const jsonPath = jsonFiles[selectedLanguage.code];
         if (jsonPath) {
