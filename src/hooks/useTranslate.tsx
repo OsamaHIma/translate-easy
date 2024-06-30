@@ -30,6 +30,7 @@ export const useTranslate = (
         return;
       }
 
+      
       if (jsonFiles) {
         const jsonPath = jsonFiles[selectedLanguage.code];
         if (jsonPath) {

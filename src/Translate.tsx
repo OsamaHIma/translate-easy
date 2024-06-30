@@ -50,7 +50,8 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
           setTranslatedText(translations[selectedLanguage.code]);
           return;
         }
-        // Check if JSON file path exists for the selected language
+
+ // Check if JSON file path exists for the selected language
         if (jsonFiles) {
           const jsonPath = jsonFiles[selectedLanguage.code];
           if (jsonPath) {
@@ -68,6 +69,7 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
             }
           }
         }
+        
         const storageKey = `${selectedLanguage.code}-${children}`;
 
         const storedText = localStorage.getItem(storageKey);
@@ -77,6 +79,7 @@ export const Translate = ({ children, translations = {} }: TranslateProps) => {
           return;
         }
 
+        
         if (useGoogleTranslate === true) {
           try {
             // Fallback to Google Translate

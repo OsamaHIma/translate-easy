@@ -107,7 +107,7 @@ export const LanguageProvider = ({
   children,
   languages = defaultLanguages,
   userSelectedLanguage = { code: "en", name: "English" },
-  developmentLanguage = { code: "en", name: "English" }, // Default to English for development
+  developmentLanguage = { code: "en", name: "English" }, 
   jsonFiles,
   useGoogleTranslate = true,
 }: LanguageProviderProps) => {
